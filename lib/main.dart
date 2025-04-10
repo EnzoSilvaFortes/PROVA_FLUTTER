@@ -83,7 +83,7 @@ class CustomPersonWidget extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: CircleAvatar(
               radius: 40,
-              backgroundImage: NetworkImage(person.imagePath), // Altere para AssetImage se usar assets locais
+              backgroundImage: NetworkImage(person.imagePath), 
             ),
           ),
           // Informações da pessoa
@@ -135,7 +135,7 @@ class Person {
   // Método estático para obter um exemplo de instância da classe
   static Person getExample() {
     return Person(
-      imagePath: 'https://via.placeholder.com/150', // Altere para 'assets/Levi.jpg' se usar uma imagem local
+      imagePath: 'https://via.placeholder.com/150',
       id: '12345',
       name: 'João',
       lastname: 'Silva',
