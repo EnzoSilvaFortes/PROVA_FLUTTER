@@ -15,13 +15,13 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => HomeScreen(),
-        '/listar': (context) => ListarScreen(),
+        '/listar-pessoas': (context) => ListarPessoasScreen(),
+        '/listar-livros': (context) => ListarLivrosScreen(),
       },
     );
   }
 }
 
-// Tela Inicial (Home)
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -30,20 +30,30 @@ class HomeScreen extends StatelessWidget {
         title: Text('Home'),
       ),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.pushNamed(context, '/listar');
-          },
-          child: Text('Ir para Listagem'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/listar-pessoas');
+              },
+              child: Text('Ir para Listagem de Pessoas'),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/listar-livros');
+              },
+              child: Text('Ir para Listagem de Livros'),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-// Tela de Listagem
-class ListarScreen extends StatelessWidget {
-  // Lista de objetos Person para exibir na tela
+class ListarPessoasScreen extends StatelessWidget {
   final List<Person> people = [
     Person.getExample(),
     Person.getExample(),
@@ -66,7 +76,29 @@ class ListarScreen extends StatelessWidget {
   }
 }
 
-// Widget Personalizado para exibir informações das pessoas
+class ListarLivrosScreen extends StatelessWidget {
+  final List<Book> books = [
+    Book.getExample(),
+    Book.getExample(),
+    Book.getExample(),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Listagem de Livros'),
+      ),
+      body: ListView.builder(
+        itemCount: books.length,
+        itemBuilder: (context, index) {
+          return CustomBookWidget(book: books[index]);
+        },
+      ),
+    );
+  }
+}
+
 class CustomPersonWidget extends StatelessWidget {
   final Person person;
 
@@ -78,15 +110,13 @@ class CustomPersonWidget extends StatelessWidget {
       margin: EdgeInsets.all(8.0),
       child: Row(
         children: [
-          // Foto da pessoa
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: CircleAvatar(
               radius: 40,
-              backgroundImage: NetworkImage(person.imagePath), 
+              backgroundImage: AssetImage(person.imagePath),
             ),
           ),
-          // Informações da pessoa
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,7 +140,35 @@ class CustomPersonWidget extends StatelessWidget {
   }
 }
 
-// Classe Person
+class CustomBookWidget extends StatelessWidget {
+  final Book book;
+
+  CustomBookWidget({required this.book});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.all(8.0),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              book.title,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            Text('Autor: ${book.author}'),
+            SizedBox(height: 4),
+            Text('Publicado em: ${book.publicationDate.toString().split(' ')[0]}'),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class Person {
   final String imagePath;
   final String id;
@@ -132,10 +190,9 @@ class Person {
     required this.registeredAt,
   });
 
-  // Método estático para obter um exemplo de instância da classe
   static Person getExample() {
     return Person(
-      imagePath: 'https://via.placeholder.com/150',
+      imagePath: 'assets/Levi.jpg',
       id: '12345',
       name: 'João',
       lastname: 'Silva',
@@ -143,6 +200,26 @@ class Person {
       cpf: '123.456.789-00',
       birthday: DateTime(1990, 5, 15),
       registeredAt: DateTime.now(),
+    );
+  }
+}
+
+class Book {
+  final String title;
+  final String author;
+  final DateTime publicationDate;
+
+  Book({
+    required this.title,
+    required this.author,
+    required this.publicationDate,
+  });
+
+  static Book getExample() {
+    return Book(
+      title: 'Flutter Essentials',
+      author: 'John Doe',
+      publicationDate: DateTime(2022, 3, 10),
     );
   }
 }
